@@ -22,6 +22,15 @@ namespace BlogApplication
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/angular")
+                .Include("~/Scripts/angular.js")
+                .Include("~/Scripts/angular-mocks.js")
+                .Include("~/Scripts/angular-route.js")
+                .Include("~/Scripts/angular-ui/*.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/custom").Include(
+                "~/Scripts/App/*.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));

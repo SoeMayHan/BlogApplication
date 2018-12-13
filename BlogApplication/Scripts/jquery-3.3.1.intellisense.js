@@ -33,15 +33,15 @@ intellisense.annotate(jQuery, {
     /// </signature>
   },
   'boxModel': function() {
-    /// <summary>Deprecated in jQuery 1.3 (see jQuery.support). States if the current page, in the user's browser, is being rendered using the W3C CSS Box Model.</summary>
+    /// <summary>Deprecated in jQuery 1.3 (see jQuery.support). States if the current page, in the User's browser, is being rendered using the W3C CSS Box Model.</summary>
     /// <returns type="Boolean" />
   },
   'browser': function() {
-    /// <summary>Contains flags for the useragent, read from navigator.userAgent. This property was removed in jQuery 1.9 and is available only through the jQuery.migrate plugin. Please try to use feature detection instead.</summary>
+    /// <summary>Contains flags for the Useragent, read from navigator.UserAgent. This property was removed in jQuery 1.9 and is available only through the jQuery.migrate plugin. Please try to use feature detection instead.</summary>
     /// <returns type="PlainObject" />
   },
   'browser.version': function() {
-    /// <summary>The version number of the rendering engine for the user's browser. This property was removed in jQuery 1.9 and is available only through the jQuery.migrate plugin.</summary>
+    /// <summary>The version number of the rendering engine for the User's browser. This property was removed in jQuery 1.9 and is available only through the jQuery.migrate plugin.</summary>
     /// <returns type="String" />
   },
   'Callbacks': function() {
