@@ -12,6 +12,7 @@ namespace BlogApplication.Models
     public class BlogPost
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int BlogId { get; set; }
         [Required]
         public string Title { get; set; }

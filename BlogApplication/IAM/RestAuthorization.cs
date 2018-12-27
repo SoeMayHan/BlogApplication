@@ -31,7 +31,7 @@ namespace BlogApplication.IAM
 
             if (actionContext.Request.Headers.Contains("Authorization"))
             {
-                string jwt = actionContext.Request.Headers.Authorization.Parameter;
+                string jwt = actionContext.Request.Headers.Authorization.Scheme;
                 var token = jwtAuth.ValidateToken(jwt);
                 if (token != null)
                 {
@@ -65,9 +65,9 @@ namespace BlogApplication.IAM
                         retval = (UserRole == "ADMIN" || UserRole == "EDITOR");//non User roles can access
                     }
                     break;
-                case "User":
+                case "USER":
                     {
-                        retval = (UserRole == "User" || UserRole == "ADMIN" || UserRole == "EDITOR");//any and every type of User can access
+                        retval = (UserRole == "USER" || UserRole == "ADMIN" || UserRole == "EDITOR");//any and every type of User can access
                     }
                     break;
             }

@@ -10,11 +10,12 @@ using BlogApplication.IAM;
 using System.Collections;
 namespace BlogApplication.Controllers
 {
+    [RoutePrefix("api/v1/auth")]//no access restrictions on this controller
     public class AuthApiController : ApiController
     {
         JWTAuthenication jwtAuth = new JWTAuthenication();
         [RestAuthorization(Roles = "USER")]
-        [HttpGet]
+        [HttpPost]
         [Route("user")]
         public BaseRestApiInterface getLoggedOnUser()
         {

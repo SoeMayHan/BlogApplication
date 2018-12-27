@@ -14,17 +14,17 @@ using BlogApplication.IAM;
 
 namespace BlogApplication.Controllers
 {
+    [RestAuthorization(Roles = "EDITOR")]
     [RoutePrefix("api/v1/blogposts")]
     public class BlogPostsApiController : ApiController
     {
         JWTAuthenication jwtAuth = new JWTAuthenication();
 
-        [RestAuthorization(Roles = "EDITOR")]
         [HttpGet]
-        [Route("")]
+        [Route("getBlogPosts")]
         public BaseRestApiInterface GetBlogPosts()
         {
-            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Parameter), false);
+            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Scheme), false);
             if(user == null)
                     throw new BlogException("userNotAccessRight", new String[] { user.UserId });
             BaseRestApiResult result = new BaseRestApiResult();
@@ -36,12 +36,11 @@ namespace BlogApplication.Controllers
             return result;
         }
 
-        [RestAuthorization(Roles = "EDITOR")]
         [HttpGet]
-        [Route("{id}")]
+        [Route("getBlogPostsById/{id}")]
         public BaseRestApiInterface GetBlogPostById(int id)
         {
-            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Parameter), false);
+            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Scheme), false);
             if (user == null)
                 throw new BlogException("userNotAccessRight", new String[] { user.UserId });
             BaseRestApiResult result = new BaseRestApiResult();
@@ -53,18 +52,22 @@ namespace BlogApplication.Controllers
             return result;
         }
 
-        [RestAuthorization(Roles = "EDITOR")]
         [HttpPost]
-        [Route("{id}")]
+        [Route("addBlogPost")]
         public BaseRestApiInterface AddBlogPosts([FromBody] BlogPost newblogPost)
         {
-            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Parameter), false);
+            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Scheme), false);
             if (user == null)
                 throw new BlogException("userNotAccessRight", new String[] { user.UserId });
             BaseRestApiResult result = new BaseRestApiResult();
+            newblogPost.CreatedDate = DateTime.Now;
+            newblogPost.CreatedBy = user.UserId;
+            newblogPost.ModifiedBy = user.UserId;
+            newblogPost.ModifiedDate = DateTime.Now;
+            newblogPost.Status = (int)PostStatus.Draft;
             result.process((ctx) =>
             {
-                var oldblogPost = ctx.BlogPosts.Find(new string[] { newblogPost.Title });
+                var oldblogPost = ctx.BlogPosts.Where(a => a.Title == newblogPost.Title).SingleOrDefault();
                 if (oldblogPost == null)
                 {
                     var newBlog = ctx.BlogPosts.Add(newblogPost);
@@ -80,18 +83,17 @@ namespace BlogApplication.Controllers
             return result;
         }
 
-        [RestAuthorization(Roles = "EDITOR")]
         [HttpPost]
-        [Route("{id}")]
+        [Route("updateBlogPost")]
         public BaseRestApiInterface EditBlogPosts([FromBody] BlogPost blogPost)
         {
-            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Parameter), false);
+            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Scheme), false);
             if (user == null)
                 throw new BlogException("userNotAccessRight", new String[] { user.UserId });
             BaseRestApiResult result = new BaseRestApiResult();
             result.process((ctx) =>
             {
-                var oldblogPost = ctx.BlogPosts.Find(new string[] { blogPost.Title });
+                var oldblogPost = ctx.BlogPosts.Where(a => a.Title == blogPost.Title).SingleOrDefault();
 
                 if (oldblogPost == null)
                 {
@@ -99,7 +101,6 @@ namespace BlogApplication.Controllers
                 }
                 else
                 {
-                    oldblogPost.Title = blogPost.Title;
                     oldblogPost.Content = blogPost.Content;
                     oldblogPost.ImageUrl = blogPost.ImageUrl;
                     oldblogPost.ModifiedBy = user.UserName;
@@ -114,16 +115,16 @@ namespace BlogApplication.Controllers
 
         [RestAuthorization(Roles = "ADMIN")]
         [HttpPost]
-        [Route("{id}")]
+        [Route("publictoready/{blogId}")]
         public BaseRestApiInterface PublicToReady(int blogId)
         {
-            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Parameter), false);
+            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Scheme), false);
             if (user == null)
                 throw new BlogException("userNotAccessRight", new String[] { user.UserId });
             BaseRestApiResult result = new BaseRestApiResult();
             result.process((ctx) =>
             {
-                var blogPost = ctx.BlogPosts.Find(new int[] { blogId });
+                var blogPost = ctx.BlogPosts.Where(b => b.BlogId == blogId).SingleOrDefault();
 
                 if (blogPost == null)
                 {
@@ -142,12 +143,11 @@ namespace BlogApplication.Controllers
             return result;
         }
 
-        [RestAuthorization(Roles = "EDITOR")]
         [HttpPost]
-        [Route("{id}")]
+        [Route("appliedstatus")]
         public BaseRestApiInterface AppliedStatus(int blogId, PostStatus pt)
         {
-            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Parameter), false);
+            User user = jwtAuth.GetUserFromAccessToken(jwtAuth.ValidateToken(Request.Headers.Authorization.Scheme), false);
             if (user == null)
                 throw new BlogException("userNotAccessRight", new String[] { user.UserId });
             BaseRestApiResult result = new BaseRestApiResult();
