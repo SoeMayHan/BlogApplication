@@ -1,6 +1,9 @@
 # BlogApplication
 BlogApplication
 
+Using JWT Authentication. 
+UserRole: "USER", "EDITOR", "ADMIN"
+
 Login (User, Editor and Admin)
 POST: http://localhost:50602/api/v1/auth/user/login
 
